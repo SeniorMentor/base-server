@@ -12,10 +12,12 @@ const { v4: uuidv4 } = require('uuid');
 module.exports = {
     giveToken : (data) => { 
         const {
-            userId
+            userId,
+            role
         } = data 
         return sign({
-            userId : userId
+            userId : userId,
+            role : role
         }, process.env.JWT_SALT,{
             expiresIn: "1d"
         }); 

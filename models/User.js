@@ -37,7 +37,8 @@ const UserSchema = new Schema({
             type:Schema.Types.ObjectId,
             ref:'group'
         }
-    ]
+    ],
+    role: String,
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 
