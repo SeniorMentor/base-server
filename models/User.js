@@ -39,6 +39,10 @@ const UserSchema = new Schema({
         }
     ],
     role: String,
+    college: {
+        type:Schema.Types.ObjectId,
+        ref:'college'
+    },
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 

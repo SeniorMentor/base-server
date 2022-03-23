@@ -195,11 +195,10 @@ const removeSkill = async(userId, skill)=>{
 const getProfile = async (userId) => {
     try {
         console.log("USER",userId); 
-        let res = await model.User.findOne({
+        return await model.User.findOne({
                 _id : userId
         },["-password"])
-        .populate("projects skills internships")
-        return res; 
+        .populate("projects skills internships college")
     } catch(err) {
         Promise.reject(err); 
     }

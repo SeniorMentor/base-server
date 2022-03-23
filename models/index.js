@@ -9,5 +9,6 @@ module.exports = {
     Like : require("./Like"),
     Project : require("./Project"),
     Internship : require("./Internship"),
-    Skill : require("./Skill")
+    Skill : require("./Skill"),
+    College: require("./College")
 }
