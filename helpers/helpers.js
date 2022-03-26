@@ -2,12 +2,20 @@ require('dotenv').config();
 
 const { sign } = require("jsonwebtoken");
 const { genSaltSync, hashSync } = require('bcryptjs');
-const model = require("../models/index"); 
 const jwt = require('jsonwebtoken');
 const jwtsalt = process.env.JWT_SALT 
 const { createClient } = require('@supabase/supabase-js')
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY);
 const { v4: uuidv4 } = require('uuid');
+
+const getRandomNum = (num = 10000) => { 
+    return Math.floor(Math.random() * num);
+};
+
+const getRandomArrElem = (arr) => {
+    const idx = getRandomNum(arr.length);
+    return arr[idx];
+};
 
 module.exports = {
     giveToken : (data) => { 
@@ -102,5 +110,13 @@ module.exports = {
             data : res.data, 
             publicURL : publicURL 
         }
-    }
+    },
+    getRandomIdFromModel: async (model, filter = {}) => {
+        let all = await model.find(filter);
+        all = all.map((item) => item._id);
+        const id = getRandomArrElem(all);
+        return id;
+    },
+    getRandomNum,
+    getRandomArrElem
 }

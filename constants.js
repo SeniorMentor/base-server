@@ -13,11 +13,27 @@ const colleges = [
     }
 ]
 
+const branch = [
+    "Computer Engineering",
+    "Electronics Engineering",
+    "Mechanincal Engineering",
+    "Production Engineering"
+];
+
+const year = [
+    "First Year",
+    "Second Year",
+    "Third Year",
+    "Fourth Year"
+];
+
 const skills = [
     "react","angular","react native","php","django","nodejs","expressjs",
 ];
 
 module.exports = {
     colleges,
-    skills
+    skills,
+    branch,
+    year
 }

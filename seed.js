@@ -1,6 +1,8 @@
 const { faker } = require('@faker-js/faker');
 const model = require('./models');
 const { colleges, skills } = require("./constants");
+const { userFactory } = require('./factory');
+const { roles } = require('./config/roles');
 
 const seedDb = async () => {
     await seedColleges();
@@ -19,9 +21,9 @@ const seedColleges = async () =>{
         }
     })
 }
+
 const seedSkills = async () => {
     skills.forEach(async (skill) => {
-        console.log(skill);
         const data = await model.Skill.findOne({skill: skill});
         if(!data) {
             model.Skill.create({
@@ -33,37 +35,53 @@ const seedSkills = async () => {
 
 
 const addUserInfo = async () => {
-    const data = await model.User.find({});
-    data.forEach(async (user)=>{
-        user.imageLink = `${faker.image.people()}?random=${getRandom()}`;
-        user.bio = faker.lorem.paragraph();
-        if(!user.collegeId) {
-            user.collegeId = await getRandomIdFromModel(model.College);
-        }
-        user.skills=[];
-        for(let i=0;i<3;i++){
-            const id = await getRandomIdFromModel(model.Skill);
-            user.skills.push(id);
-        }
-        user.save();
-    })
-}
+    await model.User.deleteMany({seed: true});
+    await model.Post.deleteMany({seed: true});
+    await userFactory({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'jdoe@gmail.com',
+        role: roles.STUDENT,
+    });
+    await userFactory({
+        fistName: 'Jai',
+        lastName: 'Taylor',
+        email: 'jtaylor@gmail.com',
+        role: roles.COLLEGE_ADMIN,
+    });
+    let proms = [];
+    for(i=0;i<10;i++){ 
+        proms.push(userFactory);
+    }
+    await Promise.all(proms.map(async(elem)=>{
+        await elem();
+    }))
+    console.log("seeding done")
+    // await Promise.all(async ()=>{
+    //     for(let i=0;i<10;i++){
+    //         await userFactory();
+    //     }
+    // })
+    
 
-const getRandom = (num = 10000) =>{ 
-    return Math.floor(Math.random() * num);
+    // const data = await model.User.find({});
+    
+    // data.forEach(async (user)=>{
+    //     user.imageLink = `${faker.image.people()}?random=${getRandomNum()}`;
+    //     user.bio = faker.lorem.paragraph();
+    //     user.role = 'student';
+    //     if(!user.collegeId) {
+    //         user.collegeId = await getRandomIdFromModel(model.College);
+    //     }
+    //     user.skills=[];
+    //     for(let i=0;i<3;i++){
+    //         const id = await getRandomIdFromModel(model.Skill);
+    //         user.skills.push(id);
+    //     }
+    //     user.save();
+    // })
 }
-
-const getRandomElem = (arr) => {
-    const idx = getRandom(arr.length);
-    return arr[idx];
-}
-
-const getRandomIdFromModel = async (model) => {
-    let all = await model.find({});
-    all = all.map((item) => item._id);
-    return getRandomElem(all);
-}
-
+ 
 module.exports = {
     seedDb
 };

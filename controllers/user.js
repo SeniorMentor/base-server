@@ -26,7 +26,6 @@ const registerUser = async (data) => {
             email, password, firstName, lastName, year, branch
         })
       
-
         const token = giveToken({
             userId : user._id 
         }); 
@@ -52,7 +51,10 @@ const loginUser = async (email, password) => {
         }
 
         const token = giveToken({
-            userId : user._id 
+            userId : user._id,
+            role: user.role,
+            firstName: user.firstName,
+            lastName: user.lastName
         }); 
 
         return {
@@ -206,7 +208,7 @@ const getProfile = async (userId) => {
 
 const getAllProfiles = async() => {
     try {   
-        let res = await model.User.find({},["-password"])
+        let res = await model.User.find({role:"student"},["-password"])
         .populate("skills projects");  
         return res; 
     } catch(err) { 

@@ -51,7 +51,7 @@ export const loginUser = async (email, password) => {
 
         const token = giveToken({
             userId : user._id,
-            role:  roles.STUDENT,
+            role:  user.role,
         }); 
 
         return {

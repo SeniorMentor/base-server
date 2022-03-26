@@ -43,6 +43,13 @@ const UserSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:'college'
     },
+    events: [ //events user is attending
+        {
+            type:Schema.Types.ObjectId,
+            ref:'event'
+        }
+    ],
+    seed: Boolean
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 

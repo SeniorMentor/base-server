@@ -36,7 +36,8 @@ const PostSchema = new Schema({
         {
             type: String 
         }
-    ]
+    ],
+    seed: Boolean
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 

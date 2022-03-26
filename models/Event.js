@@ -7,12 +7,16 @@ const EventSchema = new Schema({
     attachment : String, 
     email : String,
     likes : Number,
-    //comments not added as of now 
-    userId:
+    dateTime: Date,
+    college: //college who organizes
     {
         type:Schema.Types.ObjectId,
+        ref:'college'
+    },
+    attendees: [{
+        type:Schema.Types.ObjectId,
         ref:'user'
-    }
+    }]
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 
