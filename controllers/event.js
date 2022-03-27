@@ -25,4 +25,9 @@ const addAttendee = (userId, eventId) => {
     // remove from array if already exists 
 }
 
+// http://learnmongodbthehardway.com/schema/schemabasics/#:~:text=like%20comments%20pagination).-,Many%2DTo%2DMany%20(N%3AM),might%20have%20written%20many%20Books.
+const getStudentsAttendingAnEvent = (eventId) => {
+
+}
+
 //create event factory in ./events
