@@ -13,10 +13,10 @@ const EventSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:'college'
     },
-    attendees: [{
-        type:Schema.Types.ObjectId,
-        ref:'user'
-    }]
+    // attendees: [{
+    //     type:Schema.Types.ObjectId,
+    //     ref:'user'
+    // }]
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 
