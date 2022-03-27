@@ -5,7 +5,7 @@ const index = () => {
 }
 
 //POST /events => store event in db
-const store = () => {
+const store = (userId, data) => {
  //get college id from userId, get userId from res.locals
 }
 
