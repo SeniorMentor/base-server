@@ -15,7 +15,7 @@ const show = () => {
 }
 
 //PUT /events/:id => update an event 
-const update = () => {
+const update = (data) => {
 
 }
 
