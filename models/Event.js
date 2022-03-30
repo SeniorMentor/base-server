@@ -8,6 +8,7 @@ const EventSchema = new Schema({
     email : String,
     likes : Number,
     dateTime: Date,
+    url: String,
     college: //college who organizes
     {
         type:Schema.Types.ObjectId,

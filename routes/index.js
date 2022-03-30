@@ -3,4 +3,5 @@ module.exports = (app) => {
     app.use("/", require("./group"));
     app.use("/", require("./post"));
     app.use("/", require("./user"));
+    app.use("/", require("./event"));
 };

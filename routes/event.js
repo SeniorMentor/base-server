@@ -2,28 +2,29 @@ const express = require("express");
 const router = express.Router();
 const eventController = require("../controllers/event")
 const { uploadFile } = require("../helpers/helpers")
-const {
-    checkToken
-} = require("../middlewares/checkToken");
+const { checkToken } = require("../middlewares/checkToken");
+const { hasCollegeAdminRole } = require("../middlewares/hasrole")
 var createError = require('http-errors')
 
-router.post("/events", checkToken, async(req,res)=>{
-    console.log("running post")
-    console.log(req.files); 
+const collegeAdminMiddlewares = [
+    checkToken,
+    hasCollegeAdminRole
+]
+
+router.post("/events", collegeAdminMiddlewares, async(req,res)=> {
     const userId = res.locals.userId; 
-    let attachment = req.files.attachment; 
+    let attachment = req.files?.attachment; 
     if(attachment.length){
         attachment = attachment[0]; 
     }
-    console.log("Attachment", attachment); 
 
-    let fileName = attachment.name;
-    let extension = fileName.split(".")[1]; 
-    const file = attachment.data;
+    let fileName = attachment?.name;
+    let extension = fileName?.split(".")[1]; 
+    const file = attachment?.data;
 
     try { 
         const { 
-            title, body , email, likes, datetime
+            title, body , email, likes, datetime, url
         } = req.body; 
 
         const { 
@@ -37,7 +38,7 @@ router.post("/events", checkToken, async(req,res)=>{
         console.log("Adding new event");
         let attachment = publicURL; 
         const result = await eventController.storeEvent(userId, {
-            title, body, attachment, email, likes, datetime
+            title, body, attachment, email, likes, datetime, url
         })
         res.status(200).json(result); 
     } catch(err) {
@@ -48,16 +49,16 @@ router.post("/events", checkToken, async(req,res)=>{
     }
 })
 
-router.put("/events", checkToken,upload.single('attachment'), async(req,res)=>{
+router.put("/events", checkToken, collegeAdminMiddlewares, async(req,res)=>{
     try {
         const userId = res.locals.userId; 
     
         const {
-            title, body, attachment, email, likes, datetime
+            title, body, email, likes, datetime
         } = req.body; 
         console.log(req.body); 
         const result = await eventController.updateEvent(eventId,{
-            title, body, attachment, email, likes, datetime
+            title, body, email, likes, datetime
         })    
         res.status(200).json(result)
     } catch(err) {

@@ -37,9 +37,6 @@ const userFactory = async (data = {}) => {
         year: (role === 'student') ? getRandomArrElem(year) : null
     });
 
-    // for(let i=0;i<3;i++){
-    //     postFactory({userId: user._id});
-    // }
     let proms = [];
     for(i=0;i<3;i++){ 
         proms.push(postFactory);

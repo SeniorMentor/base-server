@@ -1,5 +1,6 @@
 require('dotenv').config(); 
 
+const model = require("../models");
 const { sign } = require("jsonwebtoken");
 const { genSaltSync, hashSync } = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -82,6 +83,9 @@ module.exports = {
         }
     },
     uploadFile : async (bucketName, bucketFolder, file, fileExtension) => {
+        if(!file) {
+            return null;
+        }
         let fileName = uuidv4(); 
         const uploadPath = `${bucketFolder}/${fileName}.${fileExtension}`; 
         console.log(bucketName, bucketFolder, fileName, uploadPath)
@@ -118,5 +122,9 @@ module.exports = {
         return id;
     },
     getRandomNum,
-    getRandomArrElem
+    getRandomArrElem,
+    userHasRole: async (userId, role) => {
+        const user = await model.User.findById(userId);
+        return user.role === role; 
+    }
 }

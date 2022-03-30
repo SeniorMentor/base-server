@@ -17,12 +17,12 @@ const getAllEvents = async() => {
 const storeEvent = async(collegeId, data) => {
  //get college id from userId, get userId from res.locals
  const {
-    title, body, attachment, email, likes ,datetime
+    title, body, attachment, email, likes ,datetime, url
 } = data 
 try {
     const res = await model.Event.create({
         collegeId : collegeId,
-        title, body, attachment, email, likes, datetime
+        title, body, attachment, email, likes, datetime, url
     })
     return res; 
 } catch(err){
@@ -45,8 +45,6 @@ const getEventById = async(eventId) => {
 //PUT /events/:id => update an event 
 
 const updateEvent = async(eventId, data) => {
-
-     
     try {
         const {
             title, body, attachment, email, likes ,datetime
@@ -58,7 +56,8 @@ const updateEvent = async(eventId, data) => {
         return res; 
     } catch(err) {
         Promise.reject(err); 
-    }
+    }   
+}
  
 
 //POST /events/:id/attend => user attends an event 
