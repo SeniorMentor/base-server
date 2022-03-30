@@ -40,7 +40,7 @@ const postsByUser = async(userId) => {
 }
 
 const getPostById = async(postId) => {
-    try {
+   try {
         let post = await model.Post.findById(postId) 
         .populate("userId","_id firstName lastName imageLink")
         .populate("comments.userId","_id firstName lastName imageLink") 
