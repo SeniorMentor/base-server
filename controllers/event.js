@@ -43,6 +43,7 @@ const getEventById = async(eventId) => {
 }
 
 //PUT /events/:id => update an event 
+
 const updateEvent = async(eventId, data) => {
 
      
@@ -58,8 +59,7 @@ const updateEvent = async(eventId, data) => {
     } catch(err) {
         Promise.reject(err); 
     }
-
-}
+ 
 
 //POST /events/:id/attend => user attends an event 
 const addAttendee = (userId, eventId) => {
