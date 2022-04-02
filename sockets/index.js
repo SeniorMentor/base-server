@@ -8,16 +8,20 @@ module.exports = (io) => {
     io.use((socket, next) => {
         const token = socket.handshake.auth.token;
         if(token){
-            decodeToken(token,(data)=>{
-                if(!data){
-                    console.log("Unauthorized socket connection");
-                    next(); 
-                    
-                } else {
-                    socket.userId = data.userId
-                    next();
-                }
-            });
+            try {
+                decodeToken(token,(data)=>{
+                    if(!data){
+                        console.log("Unauthorized socket connection");
+                        next(); 
+                    } else {
+                        socket.userId = data.userId
+                        next();
+                    }
+                });
+            } catch (err) {
+                console.log("err", err)
+            }
+           
         } else {
             next();
         }

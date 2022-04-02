@@ -65,8 +65,8 @@ module.exports = {
             callBack(null); 
         }
         jwt.verify(token, jwtsalt, (err,decoded)=>{
-            console.log(err); 
             if(err){
+                // log error here
                 callBack(null)
             } else {
                 callBack(decoded);
@@ -116,15 +116,29 @@ module.exports = {
         }
     },
     getRandomIdFromModel: async (model, filter = {}) => {
-        let all = await model.find(filter);
-        all = all.map((item) => item._id);
-        const id = getRandomArrElem(all);
-        return id;
+        let cnt = getRandomNum(model.count);
+        let elem = await model.findOne(filter).skip(cnt);
+        return elem.id;
+    },
+    getRandomIdArrayFromModel: async (model, filter = {}, count) => {
+        let arr = [];
+        let total = await model.countDocuments({});
+        for(let i=0;i<count;i++){
+            let cnt = getRandomNum(total);
+            let elem = await model.findOne({
+                ...filter,
+                '_id' : { $nin : arr } 
+            }).skip(cnt);
+            arr.push(elem?._id);
+        }
+        return arr; 
     },
     getRandomNum,
     getRandomArrElem,
     userHasRole: async (userId, role) => {
+        console.log("sidj",userId, role);
         const user = await model.User.findById(userId);
         return user.role === role; 
     }
 }
+

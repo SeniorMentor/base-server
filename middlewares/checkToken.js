@@ -18,7 +18,6 @@ module.exports = {
                         error : "Invalid/Expired token"
                     });
                 } else {
-                    console.log(decoded); 
                     res.locals.userId = decoded.userId; // attaching 'decode' property after decoding 
                     next(); 
                 }

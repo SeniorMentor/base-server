@@ -1,7 +1,5 @@
 const model = require('../models');
-// const {
-//     Comment 
-// } =
+
 const newPost = async (userId, data) => {
     const {
         title, body, attachment
@@ -20,7 +18,8 @@ const newPost = async (userId, data) => {
 const allPosts = async() => {
     try {
         const res = await model.Post.find({}).sort({ createdAt:-1})
-        .populate("userId","_id firstName lastName imageLink"); 
+        .populate("userId","_id firstName lastName imageLink")
+        .populate("tags"); 
         return res; 
     } catch(err){
         Promise.reject(err); 
@@ -44,8 +43,8 @@ const getPostById = async(postId) => {
         let post = await model.Post.findById(postId) 
         .populate("userId","_id firstName lastName imageLink")
         .populate("comments.userId","_id firstName lastName imageLink") 
-        .populate("likes.userId","_id firstName lastName imageLink"); 
-
+        .populate("likes.userId","_id firstName lastName imageLink")
+        .populate("tags");
         return post; 
     } catch(err){
         Promise.reject(err); 

@@ -1,8 +1,26 @@
 const { faker } = require('@faker-js/faker');
 const model = require('./models');
-const  { getRandomNum, getRandomIdFromModel, getRandomArrElem } = require('./helpers/helpers');
+const  { getRandomNum, getRandomIdFromModel, getRandomArrElem, getRandomIdArrayFromModel } = require('./helpers/helpers');
 const { findByEmail }  = require('./controllers/user');
 const { branch, year } = require('./constants');
+
+const tagFactory = async(data = {}) => {
+    if(!data.name) {
+        return;
+    }
+    let exists = await model.Tag.findOne({name: data.name});
+    if(exists) {
+        return; 
+    }
+    let parent = null;
+    if(data.parentName) {
+        parent = await model.Tag.findOne({name: data.parentName});
+    }
+    return await model.Tag.create({
+        name: data.name,
+        parent: parent?._id
+    });
+}
 
 const userFactory = async (data = {}) => {
     let role = data.role ?? 'student';
@@ -32,7 +50,7 @@ const userFactory = async (data = {}) => {
         imageLink: `${faker.image.people()}?random=${randomNum}` ?? null,
         bio: faker.lorem.paragraph(),
         skills: (role === 'student') ? skills : null,
-        seed: true,
+        seed: data.seed ?? true,
         branch: (role === 'student') ? getRandomArrElem(branch) : null,
         year: (role === 'student') ? getRandomArrElem(year) : null
     });
@@ -49,17 +67,19 @@ const userFactory = async (data = {}) => {
 }
 
 const postFactory = async (data={}) => {
+    let tags = await getRandomIdArrayFromModel(model.Tag,{},3);
     const post = await model.Post.create({
         userId: data.userId ?? await getRandomIdFromModel({role: 'student'}),
         title: data.title ?? faker.lorem.sentence(),
         body: data.body ??  faker.lorem.paragraphs(3),
         attachment: getRandomPostImageUri(),
-        seed: true
+        seed: true,
+        tags: tags
     });
 }
 
 const getRandomPostImageUri = () => {
-    const num = getRandomNum(4);
+    const num = getRandomNum() % 4;
     const hash = getRandomNum();
     if(num === 0) {
         return `${faker.image.business()}?random=${hash}`;
@@ -75,6 +95,15 @@ const getRandomPostImageUri = () => {
     }
 }
 
+const promiseArray = (promise, count) => {
+    let arr = []; 
+    for(let i=0;i<count;i++) {
+        arr.push(promise);
+    }
+    return arr;  
+}
+
 module.exports = {
-    userFactory
+    userFactory,
+    tagFactory
 }

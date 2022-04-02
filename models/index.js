@@ -10,5 +10,6 @@ module.exports = {
     Project : require("./Project"),
     Internship : require("./Internship"),
     Skill : require("./Skill"),
-    College: require("./College")
+    College: require("./College"),
+    Tag: require("./Tag"),
 }

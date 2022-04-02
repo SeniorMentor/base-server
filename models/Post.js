@@ -34,7 +34,8 @@ const PostSchema = new Schema({
     ],
     tags : [
         {
-            type: String 
+            type:Schema.Types.ObjectId,
+            ref:'tag'
         }
     ],
     seed: Boolean

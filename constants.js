@@ -31,9 +31,25 @@ const skills = [
     "react","angular","react native","php","django","nodejs","expressjs",
 ];
 
+const tags = {
+    "software-engineering" : {
+        "web-development" : ["react","express","php","nodejs"],
+        "ML-AI": ["numpy","pandas"],
+        "blockchain": ["ipfs","crypto"],
+        "AR-VR": [],
+        "freelancing": []
+    },
+    "higher-studies" : {
+        "mba" : [],
+        "m.tech": [],
+        "master-of-science": []
+    }
+}
+
 module.exports = {
     colleges,
     skills,
     branch,
-    year
+    year,
+    tags
 }

@@ -44,7 +44,7 @@ export const loginUser = async (email, password) => {
         if(!user) {
             return createError(500,"User does not exist"); 
         }
-        console.log(password, user.password); 
+        console.log(`${user.email} logged in`); 
         if(!compareSync(password,user.password)){ 
             throw createError(401, "Wrong Password")
         }
