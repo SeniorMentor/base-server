@@ -1,16 +1,23 @@
 const model = require('../models');
+
 // GET /events => all events
 const getAllEvents = async() => {
     try {
         const res = await model.Event.find({}).sort({ createdAt:-1})
         .populate("collegeId","_id name");
-        console.log(res)
-        console.log("Hi")
         return res; 
     } catch(err){
         Promise.reject(err); 
     } 
+}
 
+const eventsByCollege = async(collegeId) => {
+    try {
+        const res = await model.Event.find({college: collegeId});
+        return res;
+    } catch(err) {
+        Promise.reject(err);
+    }
 }
 
 //POST /events => store event in db
@@ -83,7 +90,7 @@ module.exports = {
     getEventById,
     addAttendee,
     updateEvent,
-    getStudentsAttendingAnEvent
-    
+    getStudentsAttendingAnEvent,
+    eventsByCollege
 }
 //create event factory in ./events

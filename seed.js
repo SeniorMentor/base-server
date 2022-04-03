@@ -1,10 +1,10 @@
 const { faker } = require('@faker-js/faker');
 const model = require('./models');
 const { colleges, skills, tags } = require("./constants");
-const { userFactory, tagFactory } = require('./factory');
+const { userFactory, tagFactory, eventFactory } = require('./factory');
 const { roles } = require('./config/roles');
 const  { getRandomIdArrayFromModel } = require('./helpers/helpers');
-
+const { eventAnalytics } = require("./controllers/analytics");
 
 const seedDb = async () => {
     await model.Tag.deleteMany({});
@@ -12,6 +12,9 @@ const seedDb = async () => {
     await seedColleges();
     await seedSkills();
     await addUserInfo();
+    await seedEvents();
+    await eventAnalytics();
+    console.log("seeding done")
 }
 
 const seedColleges = async () =>{
@@ -37,10 +40,10 @@ const seedSkills = async () => {
     })
 }
 
-const seedTags = async(tags,parentTag = null) => {
+const seedTags = async(tags, parentTag = null, depth = 0) => {
     if(Array.isArray(tags)) { 
         tags.forEach(async (tag)=>{   
-            await seedTags(tag,parentTag)
+            await seedTags(tag,parentTag,depth+1)
         })
         return;
     }
@@ -49,17 +52,18 @@ const seedTags = async(tags,parentTag = null) => {
         for(key in tags) {
             await tagFactory({
                 name: key,
-                parentName: parentTag
+                parentName: parentTag,
+                depth: depth
             });
-            seedTags(tags[key], key)
+            seedTags(tags[key], key, depth+1)
         }
     } 
     
     if(typeof tags === "string") { 
-        console.log("str")
         tagFactory({
             name: tags,
-            parentName: parentTag
+            parentName: parentTag,
+            depth: depth
         })
     }
 }   
@@ -72,14 +76,16 @@ const addUserInfo = async () => {
         lastName: 'Doe',
         email: 'jdoe@gmail.com',
         role: roles.STUDENT,
-        seed: false
+        seed: false,
+        events: []
     });
     await userFactory({
         fistName: 'Jai',
         lastName: 'Taylor',
         email: 'jtaylor@gmail.com',
         role: roles.COLLEGE_ADMIN,
-        seed: false
+        seed: false,
+        events: []
     });
     let proms = [];
     for(i=0;i<10;i++){ 
@@ -88,9 +94,21 @@ const addUserInfo = async () => {
     await Promise.all(proms.map(async(elem)=>{
         await elem();
     }))
-    console.log("seeding done")
+   
 }
  
+const seedEvents = async () => {
+    let colleges = await model.College.find({});
+    await model.Event.deleteMany({seed: true});
+    Promise.all(colleges.map(async(college)=>{
+        for(let i=0;i<4;i++) {
+            await eventFactory({
+                college: college._id
+            });
+        }
+    }));
+}
+
 module.exports = {
     seedDb
 };

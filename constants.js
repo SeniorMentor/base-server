@@ -33,7 +33,9 @@ const skills = [
 
 const tags = {
     "software-engineering" : {
-        "web-development" : ["react","express","php","nodejs"],
+        "frontend-development" : ["react","vuejs"],
+        "backend-development": ["express","php","nodejs"],
+        "UI-UX": ["figma"],
         "ML-AI": ["numpy","pandas"],
         "blockchain": ["ipfs","crypto"],
         "AR-VR": [],
@@ -43,6 +45,9 @@ const tags = {
         "mba" : [],
         "m.tech": [],
         "master-of-science": []
+    },
+    "events": {
+        "hackathons": []
     }
 }
 

@@ -6,7 +6,8 @@ const TagSchema = new Schema({
     parent:  {
         type:Schema.Types.ObjectId,
         ref:'tag'
-    }
+    },
+    depth: Number
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 

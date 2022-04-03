@@ -18,7 +18,8 @@ const tagFactory = async(data = {}) => {
     }
     return await model.Tag.create({
         name: data.name,
-        parent: parent?._id
+        parent: parent?._id,
+        depth: data.depth
     });
 }
 
@@ -30,6 +31,8 @@ const userFactory = async (data = {}) => {
     if(data.email) {
         let exists = await findByEmail(data.email);
         if(exists) {
+            exists.events = [];
+            await exists.save();
             return null;
         }
     }
@@ -52,7 +55,8 @@ const userFactory = async (data = {}) => {
         skills: (role === 'student') ? skills : null,
         seed: data.seed ?? true,
         branch: (role === 'student') ? getRandomArrElem(branch) : null,
-        year: (role === 'student') ? getRandomArrElem(year) : null
+        year: (role === 'student') ? getRandomArrElem(year) : null,
+        events: []
     });
 
     let proms = [];
@@ -66,6 +70,36 @@ const userFactory = async (data = {}) => {
     return user;
 }
 
+const eventFactory = async(data={}) => {
+    let collegeId = data.college;
+    if(collegeId) {
+        collegeId = await getRandomIdFromModel(model.College);
+    }
+     
+    let today = new Date();
+    let date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + getRandomNum(30));
+    const event = await model.Event.create({
+        title: faker.company.catchPhrase(),
+        body: faker.lorem.paragraph(),
+        url: faker.internet.url(),
+        college: collegeId,
+        date: date,
+        seed: data.seed ?? true
+    })
+    const users = await getRandomIdArrayFromModel(model.User, {role:'student'}, 6);
+
+    await Promise.all(
+        users.map(async (user)=>{
+            user = await model.User.findById(user);
+            user.events = user.events ?? [];
+            user.events.push(event._id);
+            await user.save();
+        })
+    );
+
+    
+}
+
 const postFactory = async (data={}) => {
     let tags = await getRandomIdArrayFromModel(model.Tag,{},3);
     const post = await model.Post.create({
@@ -74,7 +108,8 @@ const postFactory = async (data={}) => {
         body: data.body ??  faker.lorem.paragraphs(3),
         attachment: getRandomPostImageUri(),
         seed: true,
-        tags: tags
+        tags: tags,
+        createdAt: dateMonthsBack(3)
     });
 }
 
@@ -103,7 +138,15 @@ const promiseArray = (promise, count) => {
     return arr;  
 }
 
+const dateMonthsBack = (count) => {
+    const months = getRandomNum(count);
+    let date = new Date();
+    date.setMonth(date.getMonth()-months);
+    return date;
+}
+
 module.exports = {
     userFactory,
-    tagFactory
+    tagFactory,
+    eventFactory
 }

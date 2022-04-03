@@ -116,7 +116,8 @@ module.exports = {
         }
     },
     getRandomIdFromModel: async (model, filter = {}) => {
-        let cnt = getRandomNum(model.count);
+        let total = await model.countDocuments({});
+        let cnt = getRandomNum(total);
         let elem = await model.findOne(filter).skip(cnt);
         return elem.id;
     },
@@ -129,7 +130,9 @@ module.exports = {
                 ...filter,
                 '_id' : { $nin : arr } 
             }).skip(cnt);
-            arr.push(elem?._id);
+            if(elem) {
+                arr.push(elem?._id);
+            }
         }
         return arr; 
     },
@@ -138,7 +141,7 @@ module.exports = {
     userHasRole: async (userId, role) => {
         console.log("sidj",userId, role);
         const user = await model.User.findById(userId);
-        return user.role === role; 
+        return user?.role === role; 
     }
 }
 

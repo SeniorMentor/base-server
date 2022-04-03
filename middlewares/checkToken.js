@@ -9,8 +9,9 @@ module.exports = {
         //token = req.cookies[process.env.COOKIE]; 
         const authheader=req.headers.authorization;
         const token = authheader;
-        console.log(`Token : ${token}, JWT_SALT : ${jwtsalt}`)
+        
         if(token){
+            
             jwt.verify(token, jwtsalt, (err,decoded)=>{
                 console.log(err); 
                 if(err){
@@ -18,6 +19,7 @@ module.exports = {
                         error : "Invalid/Expired token"
                     });
                 } else {
+                    console.log(`Valid token`);
                     res.locals.userId = decoded.userId; // attaching 'decode' property after decoding 
                     next(); 
                 }

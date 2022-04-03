@@ -95,7 +95,7 @@ router.get("/events/:eventId/attendees", checkToken, async(req,res)=>{
     }
 })
 
-router.get("/events/all", async(req,res)=>{
+router.get("/events", async(req,res)=>{
     try { 
         const result = await eventController.getAllEvents()
         

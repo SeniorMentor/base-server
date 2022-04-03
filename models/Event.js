@@ -14,6 +14,7 @@ const EventSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:'college'
     },
+    seed: Boolean,
     // attendees: [{
     //     type:Schema.Types.ObjectId,
     //     ref:'user'
