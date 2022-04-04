@@ -1,6 +1,6 @@
 const model = require("../models");
 const mongoose = require("mongoose");
- 
+const ObjectId = require('bson').ObjectId;
 
 // /ana/event/:id
 const eventAnalytics = async (eventId) => {
@@ -17,49 +17,49 @@ const eventAnalytics = async (eventId) => {
 }
 
 // /ana/posts
-const postAnalytics = async(collegeId) => {
-    collegeId = (await model.College.findOne({}))._id; 
-    let users = await model.User.find({college: collegeId}).select("_id");
-    users = users.map(x => x._id);
+const postAnalytics = async(data) => {
+    let {
+        month, year, collegeId, tagDepth
+    } = data;
 
-    let posts = [];
-    users.forEach(async (userId)=>{
-        let res = await model.Post.find({userId: userId}).select("_id tags createdAt");
-        posts = [...res, ...posts]
-    });   
+    let users = (await model.User.find({college: collegeId}))?.map(x => x._id) ?? [];
+    let result = await Promise.all(users.map(async(userId) => {
+        let posts = await findPostsFilter(userId, month, year);
+        return posts;
+    }));
+
+    let totalPosts = [];
+    result.forEach(result => {
+        totalPosts = [...totalPosts, ...result];
+    });
+
+    let tagIdsForLevel = (await model.Tag.find({depth: tagDepth }).select("_id"))?.map(x => String(x._id)) ?? [];
+
+    let tagIdMap = {};
+    totalPosts.forEach(post => {
+        post.tags.forEach((tagId)=> {
+            tagId = String(tagId);
+            if(tagIdsForLevel.includes(tagId)) {
+                tagIdMap[tagId] = tagIdMap[tagId] ?? 0;
+                ++tagIdMap[tagId];
+            }
+        })
+    })
+
+    return tagIdMap;
 }
 
-// const postAnalytics = async (collegeId) => {
-//     collegeId = (await model.Post.findOne({}))._id;
-
-//     let result = await model.Post.aggregate([    
-//         {
-//             $lookup: {
-//                 let: { "userObjId": { "$toObjectId": "$userId" } },
-//                 from: "users",
-//                 pipeline: [
-//                     { 
-//                         $match: { 
-//                             $expr: { 
-//                                 $eq: [ "$_id", "$$userObjId" ] 
-//                             } 
-//                         }   
-//                     }
-//                 ],
-//                 as: "userDetails"
-//             }
-//         },
-//         {
-//             $unwind: "$userDetails"
-//         },
-//         { $sortByCount: "$userDetails.college" }
-        
-//     ])
-     
-// }
-
+const findPostsFilter = async (userId, month, year) => {
+    const result = await model.Post.find({
+        userId: userId,
+        month: month,
+        year: year
+    });
+    return result;
+}
 // /ana/students 
 
 module.exports =  {
-    eventAnalytics
+    eventAnalytics,
+    postAnalytics
 }

@@ -4,7 +4,7 @@ const { colleges, skills, tags } = require("./constants");
 const { userFactory, tagFactory, eventFactory } = require('./factory');
 const { roles } = require('./config/roles');
 const  { getRandomIdArrayFromModel } = require('./helpers/helpers');
-const { eventAnalytics } = require("./controllers/analytics");
+const { eventAnalytics, postAnalytics} = require("./controllers/analytics");
 
 const seedDb = async () => {
     await model.Tag.deleteMany({});

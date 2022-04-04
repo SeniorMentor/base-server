@@ -38,7 +38,9 @@ const PostSchema = new Schema({
             ref:'tag'
         }
     ],
-    seed: Boolean
+    seed: Boolean,
+    month: Number,
+    year: Number
 },
 {   
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 

@@ -28,13 +28,9 @@ const userFactory = async (data = {}) => {
     let skills = [];
     let randomNum = getRandomNum();
 
+    let user = null;
     if(data.email) {
-        let exists = await findByEmail(data.email);
-        if(exists) {
-            exists.events = [];
-            await exists.save();
-            return null;
-        }
+        user = await findByEmail(data.email);
     }
     
     for(let i=0;i<3;i++){
@@ -43,21 +39,24 @@ const userFactory = async (data = {}) => {
     }
 
     const college = await getRandomIdFromModel(model.College);
-    const user = await model.User.create({
-        firstName: data.firstName ?? faker.name.firstName(),
-        lastName: data.lastName ?? faker.name.lastName(),
-        email: data.email ?? faker.internet.email(),
-        password: "$2a$10$dbP8/1xn3a.h1.ALaqTG4ufwdB1RzY6/wgqqi0fIXYU61rEbXQCAe", // 1234
-        college: data.college ?? college,
-        role: role,
-        imageLink: `${faker.image.people()}?random=${randomNum}` ?? null,
-        bio: faker.lorem.paragraph(),
-        skills: (role === 'student') ? skills : null,
-        seed: data.seed ?? true,
-        branch: (role === 'student') ? getRandomArrElem(branch) : null,
-        year: (role === 'student') ? getRandomArrElem(year) : null,
-        events: []
-    });
+
+    if(!user) {
+        user = await model.User.create({
+            firstName: data.firstName ?? faker.name.firstName(),
+            lastName: data.lastName ?? faker.name.lastName(),
+            email: data.email ?? faker.internet.email(),
+            password: "$2a$10$dbP8/1xn3a.h1.ALaqTG4ufwdB1RzY6/wgqqi0fIXYU61rEbXQCAe", // 1234
+            college: data.college ?? college,
+            role: role,
+            imageLink: `${faker.image.people()}?random=${randomNum}` ?? null,
+            bio: faker.lorem.paragraph(),
+            skills: (role === 'student') ? skills : null,
+            seed: data.seed ?? true,
+            branch: (role === 'student') ? getRandomArrElem(branch) : null,
+            year: (role === 'student') ? getRandomArrElem(year) : null,
+            events: []
+        });
+    }
 
     let proms = [];
     for(i=0;i<3;i++){ 
@@ -102,6 +101,8 @@ const eventFactory = async(data={}) => {
 
 const postFactory = async (data={}) => {
     let tags = await getRandomIdArrayFromModel(model.Tag,{},3);
+    let createdAt = new Date();
+
     const post = await model.Post.create({
         userId: data.userId ?? await getRandomIdFromModel({role: 'student'}),
         title: data.title ?? faker.lorem.sentence(),
@@ -109,7 +110,9 @@ const postFactory = async (data={}) => {
         attachment: getRandomPostImageUri(),
         seed: true,
         tags: tags,
-        createdAt: dateMonthsBack(3)
+        createdAt,
+        month: createdAt.getMonth(),
+        year: createdAt.getFullYear()
     });
 }
 
