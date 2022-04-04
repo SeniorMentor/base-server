@@ -7,7 +7,7 @@ const EventSchema = new Schema({
     attachment : String, 
     email : String,
     likes : Number,
-    dateTime: Date,
+    dateTime: String,
     url: String,
     college: //college who organizes
     {

@@ -36,7 +36,7 @@ router.post("/events", collegeAdminMiddlewares, async(req,res)=> {
 
     try { 
         const { 
-            title, body , email, likes, datetime, url
+            title, body , email, likes, dateTime, url
         } = req.body; 
 
         if(file) {
@@ -52,7 +52,7 @@ router.post("/events", collegeAdminMiddlewares, async(req,res)=> {
         }
 
         const result = await eventController.storeEvent(userId, {
-            title, body, attachment, email, likes, datetime, url
+            title, body, attachment, email, likes, dateTime, url
         })
         res.status(200).json(result); 
     } catch(err) {

@@ -23,13 +23,16 @@ const eventsByCollege = async(collegeId) => {
 //POST /events => store event in db
 const storeEvent = async(collegeId, data) => {
  //get college id from userId, get userId from res.locals
- const {
-    title, body, attachment, email, likes ,datetime, url
+ let {
+    title, body, attachment, email, likes ,dateTime, url
 } = data 
 try {
+    if(dateTime) {
+        datetime = (new Date(dateTime)).toString();
+    }
     const res = await model.Event.create({
         collegeId : collegeId,
-        title, body, attachment, email, likes, datetime, url
+        title, body, attachment, email, likes, dateTime, url
     })
     return res; 
 } catch(err){

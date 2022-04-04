@@ -83,7 +83,7 @@ const eventFactory = async(data={}) => {
         body: faker.lorem.paragraph(),
         url: faker.internet.url(),
         college: collegeId,
-        date: date,
+        dateTime: date,
         seed: data.seed ?? true
     })
     const users = await getRandomIdArrayFromModel(model.User, {role:'student'}, 6);
