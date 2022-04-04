@@ -11,6 +11,18 @@ const collegeAdminMiddlewares = [
     hasCollegeAdminRole
 ]
 
+router.get("/events", checkToken, async (req,res) => {
+    try {
+        const result = await eventController.getAllEvents();
+        return res.json(result);
+    } catch (err) {
+        console.log(err);
+        res.status(err.status).json({
+            error : err.message
+        })
+    }
+})
+
 router.post("/events", collegeAdminMiddlewares, async(req,res)=> {
     const userId = res.locals.userId; 
     let attachment = req.files?.attachment; 
