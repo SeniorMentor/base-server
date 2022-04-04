@@ -15,7 +15,7 @@ const io = socketio(server,{
 require("./sockets/index.js")(io);
 
 
-server.listen(process.env.PORT || 5000, async ()=>{
+server.listen(process.env.PORT || 8000, async ()=>{
     try {   
         await connectDb(); 
     } catch(err) {

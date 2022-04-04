@@ -68,9 +68,20 @@ const updateEvent = async(eventId, data) => {
  
 
 //POST /events/:id/attend => user attends an event 
-const addAttendee = (userId, eventId) => {
-    // push event id in user collections events array
-    // remove from array if already exists 
+const addAttendee = async (userId, eventId) => {
+    try {
+        let user = await model.User.findById(userId)
+        let events = user.events;
+        if(events.includes(eventId)) {
+            events = events.filter(id => id!==eventId);
+        } else {
+            events.push(eventId);
+        }
+
+        return user;
+    } catch(err){
+        Promise.reject(err);
+    }
 }
 
 // http://learnmongodbthehardway.com/schema/schemabasics/#:~:text=like%20comments%20pagination).-,Many%2DTo%2DMany%20(N%3AM),might%20have%20written%20many%20Books.

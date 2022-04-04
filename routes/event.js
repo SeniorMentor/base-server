@@ -108,4 +108,21 @@ router.get("/events", async(req,res)=>{
     }
 })
 
+router.post("/events/:eventId/attend", checkToken, async (req,res) => {
+    const userId = res.locals.userId;
+    const eventId = req.params.eventId;
+
+    try {
+        const result = await eventController.addAttendee(userId, eventId);
+        return res.json({
+            message: "Operation Successful"
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(err.status).json({
+            error : err.message
+        })
+    }
+});
+
 module.exports = router;
