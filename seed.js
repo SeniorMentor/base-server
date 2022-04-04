@@ -41,9 +41,9 @@ const seedSkills = async () => {
 }
 
 const seedTags = async(tags, parentTag = null, depth = 0) => {
-    if(Array.isArray(tags)) { 
-        tags.forEach(async (tag)=>{   
-            await seedTags(tag,parentTag,depth+1)
+    if(Array.isArray(tags)) {
+        tags.forEach(async (tag)=>{
+            await seedTags(tag,parentTag,depth)
         })
         return;
     }
@@ -55,11 +55,11 @@ const seedTags = async(tags, parentTag = null, depth = 0) => {
                 parentName: parentTag,
                 depth: depth
             });
-            seedTags(tags[key], key, depth+1)
+            await seedTags(tags[key], key, depth+1)
         }
     } 
     
-    if(typeof tags === "string") { 
+    if(typeof tags === "string") {
         tagFactory({
             name: tags,
             parentName: parentTag,
