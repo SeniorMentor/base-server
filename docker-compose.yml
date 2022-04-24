@@ -1,0 +1,32 @@
+version: "3.9"
+x-aws-vpc: "vpc-036db9633ff39c067"
+services:
+  server:
+    networks:
+      - seniormentor
+    container_name: sm_base_server
+    image: "sudheer121/sm_base_server"
+    # volumes:
+    #  - ".:/code"
+    # build: .
+    ports:
+      - "8000:8000"
+    environment:
+      URI: "mongodb://sm_mongo:27017/newsm"
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_PUBLIC_ANON_KEY: ${SUPABASE_PUBLIC_ANON_KEY}
+    depends_on:
+      - sm_mongo
+
+  sm_mongo:
+    container_name: sm_mongodb
+    networks:
+      - seniormentor
+    image: "mongo"
+    ports:
+      - "27017:27017"
+    # restart: unless-stopped
+
+networks:
+  seniormentor:
+#    driver: bridge

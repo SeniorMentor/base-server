@@ -4,7 +4,7 @@ const model = require('../models');
 const getAllEvents = async() => {
     try {
         const res = await model.Event.find({}).sort({ createdAt:-1})
-        .populate("collegeId","_id name");
+        .populate("college","_id name");
         return res; 
     } catch(err){
         Promise.reject(err); 

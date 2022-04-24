@@ -59,7 +59,7 @@ const userFactory = async (data = {}) => {
     }
 
     let proms = [];
-    for(i=0;i<3;i++){ 
+    for(i=0;i<5;i++){
         proms.push(postFactory);
     }
     await Promise.all(proms.map(async(elem)=>{
@@ -75,7 +75,7 @@ const eventFactory = async(data={}) => {
         collegeId = await getRandomIdFromModel(model.College);
     }
      
-    let today = new Date();
+    let today = dateMonthsBack(2);
     let date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + getRandomNum(30));
     const event = await model.Event.create({
         title: faker.company.catchPhrase(),

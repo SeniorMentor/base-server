@@ -17,10 +17,11 @@ require("./sockets/index.js")(io);
 
 server.listen(process.env.PORT || 8000, async ()=>{
     try {   
-        await connectDb(); 
+        await connectDb();
+        await seedDb();
     } catch(err) {
         console.log("Error connecting with db")
         console.log(err)
     }
-    await seedDb();
+
 })

@@ -15,13 +15,28 @@ const newPost = async (userId, data) => {
     }   
 }
 
-const allPosts = async() => {
+const allPosts = async(filterObj) => {
+    const { collegeId, tagId } = filterObj;
     try {
-        const res = await model.Post.find({}).sort({ createdAt:-1})
-        .populate("userId","_id firstName lastName imageLink")
-        .populate("tags"); 
-        return res; 
-    } catch(err){
+
+        let res = await model.Post.find().sort({ createdAt:-1})
+        .populate("userId","_id firstName lastName imageLink college")
+        .populate("tags") ?? [];
+
+        if(collegeId) {
+            res = res.filter((obj)=>{
+                return obj.userId.college.toString() === collegeId
+            })
+        }
+        if(tagId) {
+            res = res.filter((obj)=>{
+                let tags = obj.tags.map(obj => obj._id.toString()) ?? [];
+                return tags.includes(tagId);
+            })
+        }
+
+        return res;
+    } catch(err) {
         Promise.reject(err); 
     }  
 }

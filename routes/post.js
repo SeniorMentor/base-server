@@ -11,33 +11,33 @@ router.post("/post", checkToken, async(req,res)=>{
     console.log("running post")
     console.log(req.files); 
     const userId = res.locals.userId; 
-    let attachment = req.files.attachment; 
-    if(attachment.length){
-        attachment = attachment[0]; 
-    }
-    console.log("Attachment", attachment); 
+    let attachment = req.files?.attachment;
 
-    let fileName = attachment.name;
-    let extension = fileName.split(".")[1]; 
-    const file = attachment.data;
-
-    try { 
+    try {
         const { 
             title, body 
-        } = req.body; 
+        } = req.body;
 
-        const { 
-            error, publicURL 
-        } = await uploadFile('posts', 'public', file, extension); 
+        let publishedUrl = null;
+        if(attachment?.length){
+            console.log('Attachment received')
+            attachment = attachment[0];
+            let fileName = attachment.name;
+            let extension = fileName.split(".")[1];
+            const file = attachment.data;
+            let {
+                error, publicURL
+            } = await uploadFile('posts', 'public', file, extension);
+            publishedUrl = publicURL;
 
-        if(error) {
-            throw createError("501", error)
+            if(error) {
+                throw createError("501", error)
+            }
         }
 
         console.log("Adding new post");
-        let attachment = publicURL; 
         const result = await postController.newPost(userId, {
-            title, body, attachment
+            title, body, attachment: publishedUrl
         })
         res.status(200).json(result); 
     } catch(err) {
@@ -111,8 +111,11 @@ router.put("/post/like/:id", checkToken, async(req,res)=>{
 })
 
 router.get("/posts/all", async(req,res)=>{
-    try { 
-        const result = await postController.allPosts()
+    try {
+        const result = await postController.allPosts({
+            tagId: req.query.tag,
+            collegeId: req.query.college
+        })
         
         res.status(200).json(result); 
     } catch(err) {
