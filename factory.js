@@ -33,11 +33,8 @@ const userFactory = async (data = {}) => {
     if(data.email) {
         user = await findByEmail(data.email);
     }
-    
-    for(let i=0;i<3;i++){
-        const id = await getRandomIdFromModel(model.Skill);
-        skills.push(id);
-    }
+
+    skills = await getRandomIdArrayFromModel(model.Skill);
 
     const college = await getRandomIdFromModel(model.College);
 

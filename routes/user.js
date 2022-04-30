@@ -11,7 +11,7 @@ const {
     registerUser, loginUser, updateUserDetails, getProfile, getAllProfiles, findByEmail,
     addOrUpdateInternship, addOrUpdateProject,
     addSkill, removeSkill,
-    addNotification, getNotifications, setNotificationSeen
+    getNotifications, setNotificationSeen
 } = require("../controllers/user");
 
 //to store image in uploads folder
