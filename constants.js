@@ -47,7 +47,10 @@ const tags = {
         "master-of-science": []
     },
     "events": {
-        "hackathons": []
+        "hackathons": ["error-404", "unscript"],
+        "coding-competitions" : [],
+        "cultural-fest" : ["euphoria","mood-indigo"],
+        "technical-fest" : ["crescendo","techfinity"],
     }
 }
 

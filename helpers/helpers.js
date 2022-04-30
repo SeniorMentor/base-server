@@ -116,10 +116,10 @@ module.exports = {
         }
     },
     getRandomIdFromModel: async (model, filter = {}) => {
-        let total = await model.countDocuments({});
+        let total = await model.countDocuments(filter);
         let cnt = getRandomNum(total);
         let elem = await model.findOne(filter).skip(cnt);
-        return elem.id;
+        return elem._id;
     },
     getRandomIdArrayFromModel: async (model, filter = {}, count) => {
         let arr = [];

@@ -3,6 +3,7 @@ const model = require('./models');
 const  { getRandomNum, getRandomIdFromModel, getRandomArrElem, getRandomIdArrayFromModel } = require('./helpers/helpers');
 const { findByEmail }  = require('./controllers/user');
 const { branch, year } = require('./constants');
+const mongoose = require("mongoose");
 
 const tagFactory = async(data = {}) => {
     if(!data.name) {
@@ -100,7 +101,10 @@ const eventFactory = async(data={}) => {
 }
 
 const postFactory = async (data={}) => {
-    let tags = await getRandomIdArrayFromModel(model.Tag,{},3);
+    let num = getRandomNum(3);
+    let tag = await getRandomIdFromModel(model.Tag,{depth: num});
+    let tags = await getAncestors(tag);
+
     let createdAt = new Date();
 
     const post = await model.Post.create({
@@ -114,6 +118,29 @@ const postFactory = async (data={}) => {
         month: createdAt.getMonth(),
         year: createdAt.getFullYear()
     });
+}
+
+const getParentTagId = async (tagId) => {
+    if(!tagId) {
+        return null;
+    }
+    try {
+        let tag = await model.Tag.findById(tagId);
+        return tag?.parent;
+    } catch (err) {
+        console.log("errer", err);
+    }
+
+}
+
+const getAncestors = async (tagId) => {
+    if(!tagId) {
+        return [];
+    }
+    let parent = await getParentTagId(tagId);
+    let ancestors = await getAncestors(parent);
+    return [tagId, ...ancestors];
+
 }
 
 const getRandomPostImageUri = () => {

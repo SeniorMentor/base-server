@@ -8,6 +8,9 @@ const { eventAnalytics, postAnalytics} = require("./controllers/analytics");
 
 const seedDb = async () => {
     await model.Tag.deleteMany({});
+    await model.Message.deleteMany({});
+    await model.UserNotification.deleteMany({});
+    await model.Group.deleteMany({});
     await seedTags(tags);
     await seedColleges();
     await seedSkills();
